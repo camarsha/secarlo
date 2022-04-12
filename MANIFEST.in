@@ -1,0 +1,2 @@
+include secarlo/data/maps/a_n_maps/*
+include secarlo/data/beam_pipes.csv
