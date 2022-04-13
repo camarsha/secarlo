@@ -14,9 +14,9 @@ ext2 = Extension(name='constraints',
                 )
 
 setup(name="SeCarlo",
-      version="0.1",
+      version="0.1.1",
       description="Use COSY maps to simulate SECAR",
       author="Caleb Marshall",
       packages=find_packages(),
       ext_modules=[ext1, ext2],
-      include_package_data = True)
+      include_package_data=True)

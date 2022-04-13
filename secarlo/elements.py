@@ -8,25 +8,6 @@ precision maps from COSY
 import numpy as np
 import transport
 from tqdm import tqdm
-
-
-def slow_transport(x0, coeff_array, power_array):
-    """
-    Python version of the fortran subroutine for checks
-    """
-    x = np.zeros(8)
-
-    for i in range(8):
-        for j in range(len(coeff_array)):
-            if coeff_array[i, j] == 0.0:
-                pass
-            else:
-                for k in range(8):
-                    if power_array[i, j, k] == 0.0:
-                        pass
-                    else:
-                        x[i] += coeff_array[i, j] * x0[i]**power_array[i, j, k]
-    return x
                         
 def read_map(filename):
     """
@@ -180,8 +161,17 @@ class BeamLine():
             temp = ele.map_coeff.shape[1]
             self.map_coeff[i, :, :temp] = ele.map_coeff[:, :temp]
             self.map_power[i, :, :temp, :] = ele.map_power[:, :temp, :]
+
+    def create_z_array(self):
+        self.z = np.zeros(self.num_elements)
+        for i, ele in enumerate(self.elements):
+            self.z[i] = ele.z_lim
             
     def transport(self, x0):
+        """
+        Pass entire rays to each element of the Beamline, and
+        then transport in order through the system.
+        """
         
         all_positions = np.zeros((len(x0), self.num_elements, 8))
         
