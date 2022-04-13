@@ -163,9 +163,11 @@ class BeamLine():
             self.map_power[i, :, :temp, :] = ele.map_power[:, :temp, :]
 
     def create_z_array(self):
-        self.z = np.zeros(self.num_elements)
+        self.z = np.zeros(self.num_elements+1)
+        self.z[0] = 0.0
         for i, ele in enumerate(self.elements):
-            self.z[i] = ele.z_lim
+            self.z[i+1] = ele.z_lim
+        self.z = np.cumsum(self.z)
             
     def transport(self, x0):
         """
@@ -173,12 +175,12 @@ class BeamLine():
         then transport in order through the system.
         """
         
-        all_positions = np.zeros((len(x0), self.num_elements, 8))
-        
+        all_positions = np.zeros((len(x0), self.num_elements+1, 8),
+                                 order='F')
+        all_positions[:, 0, :] = np.asfortranarray(x0[:])
         for i, ele in tqdm(enumerate(self.elements),
                            total=self.num_elements):
-            all_positions[:, i, :] = ele.transport(x0)
-            x0 = all_positions[:, i, :]
+            all_positions[:, i+1, :] = ele.transport(all_positions[:, i, :])
         return all_positions
 
     def fortran_transport(self, x0):
