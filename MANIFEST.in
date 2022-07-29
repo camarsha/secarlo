@@ -1,3 +1,3 @@
-include secarlo/data/maps/a_n_maps/fort.*
-include secarlo/data/maps/p_g_maps/fort.*
+include secarlo/a_n_maps/fort.*
+include secarlo/p_g_maps/fort.*
 include secarlo/data/beam_pipes.csv

@@ -17,6 +17,7 @@ setup(name="SeCarlo",
       version="0.1.1",
       description="Use COSY maps to simulate SECAR",
       author="Caleb Marshall",
-      packages=find_packages(),
+      packages=find_packages(where="secarlo"),
       ext_modules=[ext1, ext2],
-      include_package_data=True)
+      include_package_data=True
+      )

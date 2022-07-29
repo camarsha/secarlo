@@ -10,9 +10,9 @@ class Polygon2D():
     """
     def __init__(self, points):
         self.points = points
-        self.make_edges()
+        self.calc_edges()
 
-    def make_edges(self):
+    def calc_edges(self):
 
         self.edges = []
         for i, ele in enumerate(self.points):
@@ -28,3 +28,17 @@ class Polygon2D():
         inside = constraints.ray_casting_array(self.n, len(xn), self.edges, xn, yn)
         return inside
 
+    def calc_center(self):
+        """
+        Centroid of a closed polygon.
+        """
+
+    def calc_area(self):
+
+        """
+        Calculate the signed area of the polygon.
+        """
+        
+        
+        
+        
