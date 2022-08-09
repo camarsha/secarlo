@@ -1,6 +1,5 @@
 # Get on making this package
 from setuptools import find_packages
-
 from numpy.distutils.core import setup, Extension
 
 ext1 = Extension(name='transport',
@@ -17,7 +16,10 @@ setup(name="SeCarlo",
       version="0.1.1",
       description="Use COSY maps to simulate SECAR",
       author="Caleb Marshall",
-      packages=find_packages(where="secarlo"),
+      packages=find_packages(),
       ext_modules=[ext1, ext2],
-      include_package_data=True
+      include_package_data=True,
+      data_files = [
+          ('secarlo/data/', ['secarlo/data/beam_pipes.csv'])
+      ]
       )

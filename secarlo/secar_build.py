@@ -26,7 +26,7 @@ def build_secar(df, maps_dir):
     
 def build_a_n(df=df):
     maps_dir = pkg_resources.resource_filename('secarlo', 
-                                               'data/a_n_maps')
+                                               'a_n_maps')
     maps_dir += '/'
     secar = build_secar(df, maps_dir)
     return secar
@@ -34,7 +34,7 @@ def build_a_n(df=df):
 
 def build_p_g(df=df):
     maps_dir = pkg_resources.resource_filename('secarlo', 
-                                               'data/p_g_maps')
+                                               'p_g_maps')
     maps_dir += '/'
     secar = build_secar(df, maps_dir)
     return secar
