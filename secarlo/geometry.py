@@ -10,9 +10,9 @@ class Polygon2D():
     """
     def __init__(self, points):
         self.points = points
-        self.calc_edges()
         self.x = np.array([p[0] for p in points])
         self.y = np.array([p[1] for p in points])
+        self.calc_edges()
 
     def calc_edges(self):
         self.edges = []
@@ -20,7 +20,7 @@ class Polygon2D():
             p1 = ele
             p2 = self.points[(i + 1) % len(self.points)]
             self.edges.append((p1, p2))
-        self.edges = np.asarray(self.edges)
+        self.edges = np.asarray(self.edges, order='F')
         self.n = self.edges.shape[0]
 
     def check_bounds(self, x, y):
@@ -79,4 +79,18 @@ class Polygon2D():
         self.x = (self.x - cent_x_init ) + x
         self.y = (self.y - cent_y_init ) + y
         self.points = [(a, b) for a, b in zip(self.x, self.y)]
+        self.calc_edges()
+
+    def sort_points(self, x, y):
+        cx, cy = self.calc_center(x, y)
+        angles = []
+        for p in self.points:
+            # arctan2 goes y then x
+            theta = np.arctan2(p[1]-cy, p[0]-cx)
+            angles.append(theta)
+
+        # now sort points
+        self.points = [x for _, x in sorted(zip(angles, self.points))]
+        self.x = np.array([p[0] for p in self.points])
+        self.y = np.array([p[1] for p in self.points])
         self.calc_edges()

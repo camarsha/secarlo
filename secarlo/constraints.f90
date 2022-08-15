@@ -35,9 +35,10 @@ subroutine ray_casting(n, edges, x, y, inside)
         
      ! First cases for no intersection
      if ((y > b(2)) .or. (y < a(2)) .or. (x > max(a(1), b(1)))) then
-        continue
+        cycle
      elseif (x < min(a(1), b(1))) then
         inside = .not. inside
+        cycle
      end if
 
      ! edge check
@@ -57,6 +58,7 @@ subroutine ray_casting(n, edges, x, y, inside)
      ! last condition
      if (m_point >= m_edge) then
         inside = .not. inside
+        cycle
      end if
      
      
@@ -98,16 +100,17 @@ subroutine ray_casting_array(n, m, edges, x, y, inside)
           b = edges(i, 2, :)
      end if
 
-       ! if we are on a vertex perturb the point
+     ! if we are on a vertex perturb the point
      if ((y(j) == a(2)) .or. (y(j) == b(2))) then
         y(j) = y(j) + eps
      end if
         
      ! First cases for no intersection
      if ((y(j) > b(2)) .or. (y(j) < a(2)) .or. (x(j) > max(a(1), b(1)))) then
-        continue
+        cycle
      elseif (x(j) < min(a(1), b(1))) then
         inside(j) = .not. inside(j)
+        cycle
      end if
 
      ! edge check
@@ -127,6 +130,7 @@ subroutine ray_casting_array(n, m, edges, x, y, inside)
      ! last condition
      if (m_point >= m_edge) then
         inside(j) = .not. inside(j)
+        cycle
      end if
      
      
