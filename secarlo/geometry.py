@@ -1,13 +1,42 @@
 import numpy as np
 import constraints
-import matplotlib.pyplot as plt
 
-class Polygon2D():
+
+class Geometry:
+    def check_bounds(self, x, y):
+        return True
+
+
+class Rectangle(Geometry):
+    def __init__(self, x_lim, y_lim):
+        self.x_lim = x_lim
+        self.y_lim = y_lim
+
+    def check_bounds(self, x, y):
+        if (x < self.x_lim) and (-1.0 * self.x_lim < x):
+            if (y < self.y_lim) and (-1.0 * self.y_lim < y):
+                return True
+        return False
+
+
+class Circle(Geometry):
+    def __init__(self, radius):
+        self.radius = radius
+
+    def check_bounds(self, x, y):
+        rx = np.sqrt(x**2.0 + y**2.0)
+        if rx < self.radius:
+            return True
+        return False
+
+
+class Polygon2D(Geometry):
 
     """
     Class that builds 2d polygons and can
     check if points are within the bounded area.
     """
+
     def __init__(self, points):
         self.points = points
         self.x = np.array([p[0] for p in points])
@@ -20,13 +49,15 @@ class Polygon2D():
             p1 = ele
             p2 = self.points[(i + 1) % len(self.points)]
             self.edges.append((p1, p2))
-        self.edges = np.asarray(self.edges, order='F')
+        self.edges = np.asarray(self.edges, order="F")
         self.n = self.edges.shape[0]
 
     def check_bounds(self, x, y):
         xn = np.asarray([x]) if np.isscalar(x) else np.asarray(x)
         yn = np.asarray([y]) if np.isscalar(y) else np.asarray(y)
-        inside = constraints.ray_casting_array(self.n, len(xn), self.edges, xn, yn)
+        inside = constraints.ray_casting_array(
+            self.n, len(xn), self.edges, xn, yn
+        )
         return inside
 
     def calc_center(self, x, y):
@@ -37,11 +68,12 @@ class Polygon2D():
 
         # quicker to do one calculation since second part is shared
         xy = np.array([x, y])
-        cent = np.dot(xy + np.roll(xy, 1, axis=1),
-                      (x * np.roll(y, 1) - y * np.roll(x, 1)))
-        cent = cent/(6.0 * signed_area) 
+        cent = np.dot(
+            xy + np.roll(xy, 1, axis=1), (x * np.roll(y, 1) - y * np.roll(x, 1))
+        )
+        cent = cent / (6.0 * signed_area)
         return cent[0], cent[1]
-        
+
     def calc_area(self, x, y):
 
         """
@@ -53,7 +85,7 @@ class Polygon2D():
 
         See:
         https://stackoverflow.com/questions/24467972/calculate-area-of-polygon-given-x-y-coordinates
-        
+
         """
 
         # shift to maintain accuracy, just in case
@@ -61,7 +93,7 @@ class Polygon2D():
         y_s = y - y.mean()
 
         # using offset dot products
-        correction = y_s[-1] * x_s[0] - x_s[-1] * y_s[0] 
+        correction = y_s[-1] * x_s[0] - x_s[-1] * y_s[0]
         det_sum = np.dot(y_s[:-1], x_s[1:]) - np.dot(x_s[:-1], y_s[1:])
         return 0.5 * (det_sum + correction)
 
@@ -76,8 +108,8 @@ class Polygon2D():
         # first get the current center
         cent_x_init, cent_y_init = self.calc_center(self.x, self.y)
         # shift all points to the desired position, then remake the edges
-        self.x = (self.x - cent_x_init ) + x
-        self.y = (self.y - cent_y_init ) + y
+        self.x = (self.x - cent_x_init) + x
+        self.y = (self.y - cent_y_init) + y
         self.points = [(a, b) for a, b in zip(self.x, self.y)]
         self.calc_edges()
 
@@ -86,7 +118,7 @@ class Polygon2D():
         angles = []
         for p in self.points:
             # arctan2 goes y then x
-            theta = np.arctan2(p[1]-cy, p[0]-cx)
+            theta = np.arctan2(p[1] - cy, p[0] - cx)
             angles.append(theta)
 
         # now sort points
