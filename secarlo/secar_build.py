@@ -20,7 +20,6 @@ def produce_points(filename, unit="in"):
 
     """
 
-    print(filename)
     data = pd.read_csv(filename)
     points = [(x * 0.0254, y * 0.0254) for x, y in zip(data["X"], data["Y"])]
     return points
@@ -62,12 +61,18 @@ def create_geometry_case(geo_type, geo_file):
     if geo_type == "points":
         p = produce_points(geo_file)
         geo_obj = geometry.Polygon2D(p)
+        # make sure they are centered
+        geo_obj.sort_points()
+        geo_obj.translate(0.0, 0.0)
+
     elif geo_type == "circle":
         r = produce_radius(geo_file)
         geo_obj = geometry.Circle(r)
+
     elif geo_type == "rectangle":
         x_lim, y_lim = produce_rectangle(geo_file)
         geo_obj = geometry.Rectangle(x_lim, y_lim)
+
     else:
         geo_obj = geometry.Geometry()
 

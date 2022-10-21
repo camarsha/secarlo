@@ -91,7 +91,8 @@ class OpticalElement:
             n, m, samples, x0_tuned, self.map_coeff, self.map_power
         )
         x -= self.mistune
-        return x
+        begin, end = self.apply_constraints(x0, x)
+        return x, begin, end
 
     def _check_constraint(self, geo_obj):
 
@@ -120,7 +121,7 @@ class OpticalElement:
         """
         self.end_constraint = self._check_constraint(geo_obj)
 
-    def apply_constraints(self, x):
+    def apply_constraints(self, x_start, x_end):
 
         """Applies both the start and end constraints to
         the cosy vector x
@@ -129,11 +130,15 @@ class OpticalElement:
         :returns: Boolean
 
         """
-        x_pos = x[0]
-        y_pos = x[2]
-        start = self.start_constraint.check_bounds(x_pos, y_pos)
-        end = self.end_constraint.check_bounds(x_pos, y_pos)
-        return start and end
+        x_pos_start = x_start[0]
+        y_pos_start = x_start[2]
+        start = self.start_constraint.check_bounds(x_pos_start, y_pos_start)
+
+        x_pos_end = x_end[0]
+        y_pos_end = x_end[2]
+
+        end = self.end_constraint.check_bounds(x_pos_end, y_pos_end)
+        return start, end
 
 
 class BeamLine:

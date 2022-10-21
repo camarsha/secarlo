@@ -60,21 +60,22 @@ class Polygon2D(Geometry):
         )
         return inside
 
-    def calc_center(self, x, y):
+    def calc_center(self):
         """
         Centroid of a closed polygon.
         """
-        signed_area = self.calc_area(x, y)
+        signed_area = self.calc_area()
 
         # quicker to do one calculation since second part is shared
-        xy = np.array([x, y])
+        xy = np.array([self.x, self.y])
         cent = np.dot(
-            xy + np.roll(xy, 1, axis=1), (x * np.roll(y, 1) - y * np.roll(x, 1))
+            xy + np.roll(xy, 1, axis=1),
+            (self.x * np.roll(self.y, 1) - self.y * np.roll(self.x, 1)),
         )
         cent = cent / (6.0 * signed_area)
         return cent[0], cent[1]
 
-    def calc_area(self, x, y):
+    def calc_area(self):
 
         """
         Calculate the signed area of the polygon.
@@ -89,8 +90,8 @@ class Polygon2D(Geometry):
         """
 
         # shift to maintain accuracy, just in case
-        x_s = x - x.mean()
-        y_s = y - y.mean()
+        x_s = self.x - self.x.mean()
+        y_s = self.y - self.y.mean()
 
         # using offset dot products
         correction = y_s[-1] * x_s[0] - x_s[-1] * y_s[0]
@@ -106,15 +107,16 @@ class Polygon2D(Geometry):
         """
 
         # first get the current center
-        cent_x_init, cent_y_init = self.calc_center(self.x, self.y)
+        cent_x_init, cent_y_init = self.calc_center()
         # shift all points to the desired position, then remake the edges
         self.x = (self.x - cent_x_init) + x
         self.y = (self.y - cent_y_init) + y
         self.points = [(a, b) for a, b in zip(self.x, self.y)]
         self.calc_edges()
 
-    def sort_points(self, x, y):
-        cx, cy = self.calc_center(x, y)
+    def sort_points(self):
+        cx = self.x.mean()
+        cy = self.y.mean()
         angles = []
         for p in self.points:
             # arctan2 goes y then x
