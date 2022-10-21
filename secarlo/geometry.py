@@ -4,7 +4,7 @@ import constraints
 
 class Geometry:
     def check_bounds(self, x, y):
-        return True
+        return np.ones(x.shape)
 
 
 class Rectangle(Geometry):
@@ -25,9 +25,7 @@ class Circle(Geometry):
 
     def check_bounds(self, x, y):
         rx = np.sqrt(x**2.0 + y**2.0)
-        if rx < self.radius:
-            return True
-        return False
+        return rx < self.radius
 
 
 class Polygon2D(Geometry):

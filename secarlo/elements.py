@@ -81,16 +81,13 @@ class OpticalElement:
         self.mistune += np.array([0.0, 0.0, 0.0, 0.0, 0.0, E, m, q])
 
     def transport(self, x0):
-        x0_tuned = x0 + self.mistune
         x = np.zeros(x0.shape, dtype="float64", order="F")
-
         samples = x0.shape[0]
         n = self.map_coeff.shape[0]
         m = self.map_coeff.shape[1]
         x = transport.transport_element(
-            n, m, samples, x0_tuned, self.map_coeff, self.map_power
+            n, m, samples, x0, self.map_coeff, self.map_power
         )
-        x -= self.mistune
         begin, end = self.apply_constraints(x0, x)
         return x, begin, end
 
@@ -130,12 +127,12 @@ class OpticalElement:
         :returns: Boolean
 
         """
-        x_pos_start = x_start[0]
-        y_pos_start = x_start[2]
+        x_pos_start = x_start[:, 0]
+        y_pos_start = x_start[:, 2]
         start = self.start_constraint.check_bounds(x_pos_start, y_pos_start)
 
-        x_pos_end = x_end[0]
-        y_pos_end = x_end[2]
+        x_pos_end = x_end[:, 0]
+        y_pos_end = x_end[:, 2]
 
         end = self.end_constraint.check_bounds(x_pos_end, y_pos_end)
         return start, end
@@ -203,9 +200,14 @@ class BeamLine:
 
         all_positions = np.zeros((len(x0), self.num_elements + 1, 8), order="F")
         all_positions[:, 0, :] = np.asfortranarray(x0[:])
+        truth_array = np.zeros((len(x0), self.num_elements, 2), order="F")
         for i, ele in tqdm(enumerate(self.elements), total=self.num_elements):
-            all_positions[:, i + 1, :] = ele.transport(all_positions[:, i, :])
-        return all_positions
+            (
+                all_positions[:, i + 1, :],
+                truth_array[:, i, 0],
+                truth_array[:, i, 1],
+            ) = ele.transport(all_positions[:, i, :])
+        return all_positions, truth_array
 
     def fortran_transport(self, x0):
         all_positions = np.zeros((self.num_elements, 8), order="F")
