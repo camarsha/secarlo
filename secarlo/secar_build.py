@@ -64,6 +64,13 @@ def create_geometry_case(geo_type, geo_file):
         # make sure they are centered
         geo_obj.sort_points()
         geo_obj.translate(0.0, 0.0)
+        # switch x and y if they are rotated, all chambers
+        # are larger in x than y
+        if max(geo_obj.y) > max(geo_obj.x):
+            p = [(y, x) for x, y in zip(geo_obj.x, geo_obj.y)]
+            geo_obj = geometry.Polygon2D(p)
+            geo_obj.sort_points()
+            geo_obj.translate(0.0, 0.0)
 
     elif geo_type == "circle":
         r = produce_radius(geo_file)
