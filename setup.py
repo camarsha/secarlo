@@ -52,6 +52,8 @@ setup(
         ("secarlo/data/", ["secarlo/data/q11_chamber.csv"]),
         ("secarlo/data/", ["secarlo/data/ic_window.csv"]),
         ("secarlo/data/", ["secarlo/data/dl29_chamber.csv"]),
+        ("secarlo/data/", ["secarlo/data/6_way_crosses.csv"]),
+        ("secarlo/data/", ["secarlo/data/B7_entrance.csv"]),
         ("secarlo/p_g_maps", ["secarlo/p_g_maps/fort.30"]),
         ("secarlo/p_g_maps", ["secarlo/p_g_maps/fort.31"]),
         ("secarlo/p_g_maps", ["secarlo/p_g_maps/fort.32"]),
