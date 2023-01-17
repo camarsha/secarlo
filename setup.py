@@ -50,5 +50,7 @@ setup(
         ("secarlo/data/", ["secarlo/data/beam_pipes.csv"]),
         ("secarlo/data/", ["secarlo/data/oct1.csv"]),
         ("secarlo/data/", ["secarlo/data/q11_chamber.csv"]),
+        ("secarlo/data/", ["secarlo/data/ic_window.csv"]),
+        ("secarlo/data/", ["secarlo/data/dl29_chamber.csv"]),
     ],
 )
