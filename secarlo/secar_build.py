@@ -7,7 +7,9 @@ import numpy as np
 # Geometry and optical elements defined in csv file
 beam_pipes = pkg_resources.resource_filename("secarlo", "data/beam_pipes.csv")
 
-df = pd.read_csv(beam_pipes, keep_default_na=False)
+df = pd.read_csv(
+    beam_pipes, keep_default_na=False, sep="\s*,\s*", engine="python"
+)
 
 
 def produce_points(filename, unit="in"):
