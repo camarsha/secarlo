@@ -3,12 +3,6 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
 
-def transmission(truth_rays):
-    success = np.sum(np.all(truth_rays, axis=1)) / 2.0
-    total = float(truth_rays.shape[0])
-    return success / total
-
-
 def plot_rays(
     output_rays,
     elements=True,
