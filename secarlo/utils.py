@@ -8,7 +8,7 @@ def ray_to_spline(ray, z, coor=0, k=3):
     return f
 
 
-def transmission(truth_array):
-    total = truth_array.shape[0]
-    loss = np.sum(np.any(truth_array == 0, axis=(1, 2)))
-    return (1 - (loss / total)) * 100
+def transmission(truth_rays):
+    success = (np.sum(np.all(truth_rays, axis=1))) / 2.0
+    total = float(truth_rays.shape[0])
+    return success / total
